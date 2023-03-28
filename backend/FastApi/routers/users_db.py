@@ -8,7 +8,9 @@ from db.client import db_client
 from bson import ObjectId
 
 router = APIRouter(
-    prefix="/userdb", tags=["userdb"], responses={status.HTTP_404_NOT_FOUND: {"message": "Not Found"}}
+    prefix="/userdb",
+    tags=["userdb"],
+    responses={status.HTTP_404_NOT_FOUND: {"message": "Not Found"}},
 )
 
 
@@ -36,7 +38,8 @@ async def user(id: str):
 async def add_user(user: User):
     if type(search_user("email", user.email)) == User:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User already exists")
+            status_code=status.HTTP_404_NOT_FOUND, detail="User already exists"
+        )
     print("llega acá")
     user_dict = dict(user)
     del user_dict["id"]
@@ -56,7 +59,9 @@ def put_user(user: User):
     try:
         db_client.users.find_one_and_replace({"_id": ObjectId(user.id)}, user_dict)
     except:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist"
+        )
 
     return search_user("_id", ObjectId(user.id))
 
